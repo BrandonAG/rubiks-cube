@@ -11,7 +11,7 @@ const commonProperties = {
 
 // Colors from https://homes.luddy.indiana.edu/stsher/files/Rubiks_Cube.pdf
 const bulkMat = new THREE.MeshStandardMaterial({
-  color: 'black',
+  color: 0x2c2c2c,
   metalness: 0.2,
   roughness: 0.2,
 });
@@ -106,8 +106,8 @@ export default class Piece {
 
       raycasters.push(new THREE.Raycaster(new THREE.Vector3(xOffset, yOffset, zOffset + 2), new THREE.Vector3(0, 0, -1)));
       rays.zRays.push(new THREE.Raycaster(new THREE.Vector3(xOffset, yOffset, zOffset + 2), new THREE.Vector3(0, 0, -1)));
-      const frontRay = new THREE.ArrowHelper(new THREE.Vector3(0, 0, -10), new THREE.Vector3(xOffset, yOffset, zOffset + 2));
-      scene.add(frontRay);
+      // const frontRay = new THREE.ArrowHelper(new THREE.Vector3(0, 0, -10), new THREE.Vector3(xOffset, yOffset, zOffset + 2));
+      // scene.add(frontRay);
     } else if(layer === cubeSize) {
       // Back Face
       materials[5] = orangeMat;
@@ -121,8 +121,8 @@ export default class Piece {
 
       raycasters.push(new THREE.Raycaster(new THREE.Vector3(xOffset, yOffset + 2, zOffset), new THREE.Vector3(0, -1, 0)));
       rays.yRays.push(new THREE.Raycaster(new THREE.Vector3(xOffset, yOffset + 2, zOffset), new THREE.Vector3(0, -1, 0)));
-      const topRay = new THREE.ArrowHelper(new THREE.Vector3(0, -10, 0), new THREE.Vector3(xOffset, yOffset + 2, zOffset));
-      scene.add(topRay);
+      // const topRay = new THREE.ArrowHelper(new THREE.Vector3(0, -10, 0), new THREE.Vector3(xOffset, yOffset + 2, zOffset));
+      // scene.add(topRay);
     } else if(row === cubeSize) {
       // Bottom Face
       materials[3] = yellowMat;
@@ -136,8 +136,8 @@ export default class Piece {
 
       raycasters.push(new THREE.Raycaster(new THREE.Vector3(xOffset - 2, yOffset, zOffset), new THREE.Vector3(1, 0, 0)));
       rays.xRays.push(new THREE.Raycaster(new THREE.Vector3(xOffset - 2, yOffset, zOffset), new THREE.Vector3(1, 0, 0)));
-      const leftRay = new THREE.ArrowHelper(new THREE.Vector3(10, 0, 0), new THREE.Vector3(xOffset - 2, yOffset, zOffset));
-      scene.add(leftRay);
+      // const leftRay = new THREE.ArrowHelper(new THREE.Vector3(10, 0, 0), new THREE.Vector3(xOffset - 2, yOffset, zOffset));
+      // scene.add(leftRay);
     } else if(column === cubeSize) {
       // Right Face
       materials[0] = blueMat;
@@ -151,29 +151,7 @@ export default class Piece {
     
     this.mesh.position.set(xOffset, yOffset, zOffset);
     this.mesh.castShadow = true;
-    // this.mesh.receiveShadow = true;
-
-    // for(let raycaster of raycasters) {
-    //   if(raycaster.intersectObjects([this.mesh]).length > 0) {
-    //     console.log(raycaster.intersectObjects([this.mesh]));
-    //   }
-    // }
-
-    // console.log(raycaster.intersectObjects([this.mesh]));
-    // let intersects = raycaster.intersectObjects([this.mesh]);
-
-    // if(intersects.length > 0) {
-    //   for ( let i = 0; i < intersects.length; i ++ ) {
-
-    //     intersects[ i ].object.material[0].color.set( 0xff0000 );
-    //     intersects[ i ].object.material[1].color.set( 0xff0000 );
-    //     intersects[ i ].object.material[2].color.set( 0xff0000 );
-    //     intersects[ i ].object.material[3].color.set( 0xff0000 );
-    //     intersects[ i ].object.material[4].color.set( 0xff0000 );
-    //     intersects[ i ].object.material[5].color.set( 0xff0000 );
-    
-    //   }
-    // }
+    this.mesh.name = "piece";
 
     // let position = new THREE.Vector3();
     // this.mesh.getWorldPosition(position);
@@ -182,9 +160,10 @@ export default class Piece {
     // this.mesh.getWorldQuaternion(quaternion);
     // console.log(quaternion);
     // if(row === 1) {
-    //   this.mesh.rotation.y = Math.PI / 2;
+    //   // this.mesh.rotation.y = Math.PI / 2;z
+    //   this.mesh.visible = false;
     // }
-    // this.mesh.matrixWorldAutoUpdate = true;
+    this.mesh.matrixWorldAutoUpdate = true;
 
     scene.add(this.mesh);
   };

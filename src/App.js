@@ -25,7 +25,7 @@ function App() {
     camera.position.z = 20;
 
     const cube = new Cube(scene, 3);
-    console.log(scene);
+    // console.log(scene);
 
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
     scene.add(ambientLight);
@@ -43,7 +43,10 @@ function App() {
       RIGHT: THREE.MOUSE.ROTATE,
       MIDDLE: THREE.MOUSE.DOLLY
     };
+    controls.keys = {}
+    // controls.touches = {}
     controls.enableDamping = true;
+    // console.log(controls);
 
     const group = new THREE.Group();
     scene.add(group);
@@ -59,18 +62,24 @@ function App() {
         group.children[0].quaternion.copy(quaternion);
         group.children[0].updateMatrix();
 
-        group.children[0].matrixWorldAutoUpdate = true;
+        // group.children[0].matrixWorldAutoUpdate = true;
 
         scene.add(group.children[0]);
       }
+      group.rotation.x = 0;
+      group.rotation.y = 0;
+      group.rotation.z = 0;
     };
 
     const onKeyDown = (event) => {
       if(event.key === 'q') {
 
         for(let ray of cube.rays.zRays) {
-          console.log(scene.children.filter((obj) => obj.type === "Mesh").slice(-8));
-          console.log(ray.intersectObjects(scene.children.filter((obj) => obj.type === "Mesh")).slice(-8));
+          // console.log(scene.children.filter((obj) => obj.type === "Mesh"));
+          let intersect = ray.intersectObjects(scene.children.filter((obj) => obj.name === "piece"))[0];
+          let color = intersect.object.material[intersect.face.materialIndex].color;
+          // console.log(color.getHexString());
+          // console.log(ray.intersectObjects(scene.children.filter((obj) => obj.name === "piece")));
         }
 
       }
@@ -81,11 +90,184 @@ function App() {
         group.rotation.y = Math.PI / 2;
 
         clearGroup();
-        console.log(scene.children.filter((obj) => obj.type === "Mesh"));
+        // console.log(cube.pieces);
+        // console.log(scene.children.filter((obj) => obj.type === "Mesh"));
       }
     }
 
     window.addEventListener('keydown', onKeyDown);
+
+    const pointerCaster = new THREE.Raycaster();
+    const pointerClickedCubePosition = new THREE.Vector3();
+    const pointerCurrentCubePosition = new THREE.Vector3();
+    const pointerClickedPosition = new THREE.Vector3();
+    const pointerPosition = new THREE.Vector3();
+    let rotationFlag = false;
+    let axisDirection = '';
+    let clickedAxis = '';
+    let axisOfRotation = '';
+    const faceToAxis = {
+      0: 'x',
+      1: 'x',
+      2: 'y',
+      3: 'y',
+      4: 'z',
+      5: 'z',
+    };
+
+    const getPointerCubePosition = () => {
+      pointerCaster.setFromCamera(
+        pointerPosition,
+        camera
+      )
+
+      const intersects = pointerCaster.intersectObjects(scene.children.filter((obj) => obj.name === "faceDetection"));
+
+      if (intersects.length > 0) {
+        Object.assign(pointerCurrentCubePosition, intersects[0].point);
+        clickedAxis = faceToAxis[intersects[0].face.materialIndex];
+      } else {
+        Object.assign(pointerCurrentCubePosition, {x: null, y: null, z: null});
+      }
+    };
+
+    const getClickedPiecePosition = () => {
+      pointerCaster.setFromCamera(
+        pointerClickedPosition,
+        camera
+      )
+
+      const intersects = pointerCaster.intersectObjects(scene.children.filter((obj) => obj.name === "piece"));
+      // console.log(intersects);
+      
+      return intersects[0].object.position;
+    }
+
+    const scaleDetectionCube = (scaleFlag) => {
+      if (scaleFlag) {
+        for (let key of ['x', 'y', 'z']) {
+          if (pointerCurrentCubePosition[key] < 4.999 && pointerCurrentCubePosition[key] > -4.999) {
+            cube.faceDetection.scale[key] = 10;
+          }
+        }
+      } else {
+        for (let key of ['x', 'y', 'z']) {
+          cube.faceDetection.scale[key] = 1;
+        }
+      }
+    };
+
+    const manipulateCube = () => {
+      pointerCaster.setFromCamera(
+        pointerPosition,
+        camera
+      )
+
+      const intersects = pointerCaster.intersectObjects(scene.children.filter((obj) => obj.name === "piece"));
+
+      if (intersects.length > 0) {
+        // console.log(intersects);
+        intersects[0].object.material = new THREE.MeshStandardMaterial({color: 'purple'});
+      }
+    };
+
+    const translateMousePosition = (event) => {
+      pointerPosition.x = event.clientX / sizes.width * 2 - 1;
+      pointerPosition.y = -event.clientY / sizes.height * 2 + 1;
+    };
+
+    const onMouseMove = (event) => {
+
+      translateMousePosition(event);
+      getPointerCubePosition();
+
+      if (!rotationFlag) {
+        for (let key of ['x', 'y', 'z']) {
+          if (Math.abs(pointerCurrentCubePosition[key] - pointerClickedCubePosition[key]) > cube.cubeDimension / cube.cubeSize / 8) {
+            rotationFlag = true;
+            axisDirection = key;
+            // console.log(axisDirection);
+            // console.log(clickedAxis);
+            let position = getClickedPiecePosition();
+            let axisArray = ['x', 'y', 'z'];
+            axisOfRotation = axisArray.filter(a => a !== axisDirection && a !== clickedAxis)[0];
+            // console.log(axisOfRotation);
+            // console.log(position[axisOfRotation]);
+            let pieces = scene.children.filter((obj) => ((obj.name === "piece") && ((obj.position[axisOfRotation] > (position[axisOfRotation] - 0.00002)) && (obj.position[axisOfRotation] < (position[axisOfRotation] + 0.00002)))));
+            // console.log(pieces);
+            group.add(...pieces);
+          }
+        }
+      } else {
+        let modifier = 1;
+        if (axisDirection === 'x') {
+          modifier = 1;
+        } else {
+          modifier = -1;
+        }
+        // console.log("Rotation Axis: " + axisOfRotation)
+        // console.log("Direction Axis: " + axisDirection)
+        // console.log("Clicked: " + pointerClickedCubePosition[clickedAxis]);
+        if (pointerClickedCubePosition[clickedAxis] < 0) {
+          modifier = -modifier;
+        }
+        if ((axisOfRotation === 'x') && (clickedAxis === 'y')) {
+          modifier = -modifier;
+        }
+        if ((axisOfRotation === 'z')) {
+          modifier = -modifier;
+        }
+        group.rotation[axisOfRotation] = modifier * Math.PI / 20 * (pointerCurrentCubePosition[axisDirection] - pointerClickedCubePosition[axisDirection]);
+        if (group.rotation[axisOfRotation] >= Math.PI / 2) {
+          group.rotation[axisOfRotation] = Math.PI / 2;
+        } else if (group.rotation[axisOfRotation] <= -Math.PI / 2) {
+          group.rotation[axisOfRotation] = -Math.PI / 2;
+        }
+        // console.log("Rotating");
+      }
+      
+      // manipulateCube();
+
+    };
+
+    const onMouseDown = (event) => {
+      if(event.button === 0) {
+        translateMousePosition(event);
+        getPointerCubePosition();
+        Object.assign(pointerClickedPosition, pointerPosition);
+        Object.assign(pointerClickedCubePosition, pointerCurrentCubePosition);
+        // console.log(pointerClickedCubePosition);
+        if(pointerClickedCubePosition.x !== null) {
+          controls.enableRotate = false;
+          getClickedPiecePosition();
+          scaleDetectionCube(true);
+          window.addEventListener('pointermove', onMouseMove);
+        }
+      }
+    };
+
+    const onMouseUp = (event) => {
+      if(event.button === 0) {
+        controls.enableRotate = true;
+        // controls.update();
+        scaleDetectionCube(false);
+        rotationFlag = false;
+        if (group.children.length > 0) {
+          if (group.rotation[axisOfRotation] < -Math.PI / 4) {
+            group.rotation[axisOfRotation] = -Math.PI / 2;
+          } else if (group.rotation[axisOfRotation] > Math.PI / 4) {
+            group.rotation[axisOfRotation] = Math.PI / 2;
+          } else {
+            group.rotation[axisOfRotation] = 0;
+          }
+          clearGroup();
+        }
+        window.removeEventListener('pointermove', onMouseMove);
+      }
+    };
+
+    window.addEventListener('pointerdown', onMouseDown);
+    window.addEventListener('pointerup', onMouseUp);
 
     window.addEventListener('resize', () => {
       // Update sizes
@@ -103,17 +285,7 @@ function App() {
 
     function animate() {
       requestAnimationFrame( animate );
-
-      // lightPivot.rotation.y = controls.getAzimuthalAngle();
-      // lightPivot.rotation.x = controls.getPolarAngle();
-      // lightPivot.rotation.y = camera.rotation.y;
-      // lightPivot.rotation.x = camera.rotation.x;
-      // console.log(controls.getAzimuthalAngle());
-      // console.log(controls.getPolarAngle());
-      // console.log(camera);
-      // console.log(spotLight);
-      // console.log(controls);
-
+      // controls.update();
       renderer.render( scene, camera );
     }
 
