@@ -10,7 +10,9 @@ Simple 3x3 Rubik's Cube web application that utilizes Three.js to render and ani
 ## Mouse Controls
 
 Left Mouse Click: click and drag to rotate selected block
+
 Right Mouse Click: click and drag to rotate entire cube
+
 Mouse Wheel: zoom in and out
 
 ## Touchscreen Controls
