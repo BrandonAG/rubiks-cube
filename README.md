@@ -5,7 +5,7 @@
 
 ## Description
 
-Simple 3x3 Rubik's Cube web application that utilizes Three.js to render and animate the piano in 3D.
+Simple 3x3 Rubik's Cube web application that utilizes Three.js to render and animate the cube in 3D.
 
 ## Mouse Controls
 
