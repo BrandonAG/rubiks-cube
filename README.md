@@ -42,3 +42,5 @@ npm start
 ## Example Deployment
 
 [Try out the Rubik's Cube](https://brandonag.github.io/rubiks-cube/)
+
+![Cube Example](https://github.com/BrandonAG/rubiks-cube/blob/main/rubiks_cube.PNG?raw=true)
