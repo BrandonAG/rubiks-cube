@@ -196,6 +196,7 @@ function App() {
             let pieces = scene.children.filter((obj) => ((obj.name === "piece") && ((obj.position[axisOfRotation] > (position[axisOfRotation] - 0.00002)) && (obj.position[axisOfRotation] < (position[axisOfRotation] + 0.00002)))));
             // console.log(pieces);
             group.add(...pieces);
+            break;
           }
         }
       } else {
@@ -252,6 +253,7 @@ function App() {
         // controls.update();
         scaleDetectionCube(false);
         rotationFlag = false;
+        // Rotation Snapping After Click Released
         if (group.children.length > 0) {
           if (group.rotation[axisOfRotation] < -Math.PI / 4) {
             group.rotation[axisOfRotation] = -Math.PI / 2;
