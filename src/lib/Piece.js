@@ -46,32 +46,6 @@ const orangeMat = new THREE.MeshStandardMaterial({
   ...commonProperties
 });
 
-// const materials = [
-//   // Right
-//   new THREE.MeshStandardMaterial({
-//     color: 'blue',
-//   }),
-//   // Left
-//   new THREE.MeshStandardMaterial({
-//     color: 'green',
-//   }),
-//   // Top
-//   new THREE.MeshStandardMaterial({
-//     color: 'white',
-//   }),
-//   // Bottom
-//   new THREE.MeshStandardMaterial({
-//     color: 'yellow',
-//   }),
-//   // Front
-//   new THREE.MeshStandardMaterial({
-//     color: 'red',
-//   }),
-//   // Back
-//   new THREE.MeshStandardMaterial({
-//     color: 'orange',
-//   })
-// ];
 const material = new THREE.MeshStandardMaterial({
   color: 'purple',
 });
@@ -153,16 +127,6 @@ export default class Piece {
     this.mesh.castShadow = true;
     this.mesh.name = "piece";
 
-    // let position = new THREE.Vector3();
-    // this.mesh.getWorldPosition(position);
-    // console.log(position);
-    // let quaternion = new THREE.Quaternion();
-    // this.mesh.getWorldQuaternion(quaternion);
-    // console.log(quaternion);
-    // if(row === 1) {
-    //   // this.mesh.rotation.y = Math.PI / 2;z
-    //   this.mesh.visible = false;
-    // }
     this.mesh.matrixWorldAutoUpdate = true;
 
     scene.add(this.mesh);

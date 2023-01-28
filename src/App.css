@@ -18,6 +18,13 @@ body
     outline: none;
 }
 
+.UI
+{
+    position: fixed;
+    top: 10px;
+    left: 10px;
+}
+
 .App {
   text-align: center;
 }
@@ -55,4 +62,64 @@ body
   to {
     transform: rotate(360deg);
   }
+}
+
+.UI {
+  width: 100%;
+  height: 100%;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  /* flex-direction: column; */
+  /* align-items: center; */
+}
+
+.UI .difficulty-select {
+  position: absolute;
+  margin-top: 1vh;
+}
+
+.UI h1 {
+  color:#2c2c2c;
+  margin-bottom: 20px;
+  font-size: 7vh;
+  font-family: monospace;
+  text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white,
+  0 0 35px white;
+  /* text-shadow: 0 0 40px white; */
+  position: absolute;
+  text-align: center;
+  top: 0; left: 0; bottom: 0; right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.UI .difficulty-select button {
+  color: #2c2c2c;
+  background-color: white;
+  font-size: 3.8vh;
+  font-family: monospace;
+  border-radius: 5px;
+  margin: 0.8vh;
+  padding: 0.5vh 1vh 0.5vh;
+  position: relative;
+  border-color: #2c2c2c;
+  box-shadow: 0 0 250px 0px white;
+  opacity: 0.3;
+  /* border-width: 3px; */
+}
+
+.UI .difficulty-select button:nth-child(2){
+  background-color: #fed52f;
+}
+
+.UI .difficulty-select button:nth-child(3){
+  background-color: #199b4c;
+}
+
+.UI button:hover {
+  opacity: 1;
 }
