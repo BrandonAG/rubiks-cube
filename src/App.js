@@ -105,13 +105,22 @@ function App() {
         rotateModifier = -1;
       }
 
-      let iterations = 10;
+      // let iterations = 10;
+      // for (let i = (Math.PI / 2) / iterations; i <= Math.PI / 2; i = i + (Math.PI / 2) / iterations) {
+      //   await new Promise((resolve) => {
+      //     setTimeout(() => {
+      //       group.rotation[axis] = rotateModifier * i;
+      //       resolve();
+      //     }, 20);
+      //   });
+      // }
+      let iterations = 60;
       for (let i = (Math.PI / 2) / iterations; i <= Math.PI / 2; i = i + (Math.PI / 2) / iterations) {
         await new Promise((resolve) => {
           setTimeout(() => {
             group.rotation[axis] = rotateModifier * i;
             resolve();
-          }, 20);
+          }, (200 / iterations));
         });
       }
       // group.rotation[axis] = rotateModifier * Math.PI / 2;
