@@ -168,18 +168,18 @@ function App() {
     return 1;
   };
 
-  // const onKeyDown = (event) => {
-  //   if(event.key === 'q') {
-  //     console.log(checkForVictory());
-  //   }
-  //   if(event.key === 'a') {
-  //     console.log(scene);
-  //   }
-  //   if(event.key === 'z') {
-  //     console.log(gameState);
-  //     console.log(gameDifficulty);
-  //   }
-  // }
+  const onKeyDown = (event) => {
+    // if(event.key === 'q') {
+    //   console.log(checkForVictory());
+    // }
+    // if(event.key === 'a') {
+    //   console.log(scene);
+    // }
+    // if(event.key === 'z') {
+    //   console.log(gameState);
+    //   console.log(gameDifficulty);
+    // }
+  }
 
   const getPointerCubePosition = () => {
     pointerCaster.setFromCamera(
